@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+if [ $# -ne 2 ]; then
+  echo "Usage:"
+  echo "$0 <phrase> <dictionaryfile>"
+  exit -1
+fi;
+
+
 echo $1 $2
 
 rm -fr classes
