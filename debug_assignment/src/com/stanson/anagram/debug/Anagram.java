@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 /**
  * Implementation with bugs - TODO please change all documentation
  *
- * Created by yourname on date
+ * Created by Ben Bartels on 5/27/17
  */
 public class Anagram {
 
@@ -30,6 +30,8 @@ public class Anagram {
         public int charIndex;
 
         public TrieNode[] children = null;
+
+        public String word;
     }
 
     private TrieNode root = new TrieNode();
@@ -57,7 +59,7 @@ public class Anagram {
         TrieNode node = root;
         char[] charArray = word.toLowerCase().toCharArray();
 
-        for (int idx=0; idx < charArray.length;idx++)
+        for (int idx=0; idx < charArray.length; idx++)
         {
             Character c = charArray[idx];
             int cIndex = c-97;
@@ -78,6 +80,7 @@ public class Anagram {
 
             node = child;
         }
+        node.word = word.toLowerCase();
     }
 
     /**
@@ -109,36 +112,31 @@ public class Anagram {
         }
 
         ArrayList<String> result = new ArrayList<String>();
-        anagramHelper(root, charCount, 0, search.length(), "", result);
+        anagramHelper(root, charCount, 0, search.length(), result);
 
         return result;
     }
 
-    private void anagramHelper(TrieNode node, int[] charCount, int currentLen, final int maxLen, String inprocessResult, List<String> result)
+    private void anagramHelper(TrieNode node, int[] charCount, int currentLen, final int maxLen, List<String> result)
     {
-        if (node.children == null) {
-            if (currentLen == maxLen) {
-                result.add(inprocessResult);
-            } else {
-                if (root.children != null) {
-                    for (TrieNode child : root.children) {
-                        if (child != null && charCount[child.charIndex] > 0) {
-                            charCount[child.charIndex]--;
-                            String subAnagram = inprocessResult + " " + child.character;
-                            anagramHelper(child, charCount, currentLen + 1, maxLen, subAnagram, result);
-                        }
-                    }
-                }
-            }
+        // restructure so that we check if word is null first, then length after
+        if (node.word != null) {
+            // grab word and then attempt to find another word with remainder
         }
+
+        // BCB-2 05/17 - Consolidated logic into single if-statement
+        if (currentLen == maxLen && node.word != null) {
+
+            
+        }
+        // BCB-10 05/17 - Removed redundant else statement. It could never be entered.
 
         if (currentLen < maxLen && node.children != null) {
             for (TrieNode child : node.children) {
                 if (child != null && charCount[child.charIndex] > 0) {
                     charCount[child.charIndex]--;
-                    String subAnagram = inprocessResult + child.character;
-
-                    anagramHelper(child, charCount, currentLen + 1, maxLen, subAnagram, result);
+                    anagramHelper(child, charCount, currentLen + 1, maxLen, result);
+                    charCount[child.charIndex]++;
                 }
             }
         }
